@@ -104,13 +104,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             fadeView();
             countOfCorrectAnswer = (countOfCorrectAnswer + 1);
             text_card_question.setTextColor(getResources().getColor(R.color.white));
-            cardView.setCardBackgroundColor(getResources().getColor(R.color.purple_500));
+            cardView.setCardBackgroundColor(getResources().getColor(R.color.card_true));
         } else {
             btn_false.setEnabled(false);
             btn_true.setEnabled(false);
             shakeAnimation();
             text_card_question.setTextColor(getResources().getColor(R.color.white));
-            cardView.setCardBackgroundColor(getResources().getColor(R.color.design_default_color_error));
+            cardView.setCardBackgroundColor(getResources().getColor(R.color.card_false));
         }
     }
 
