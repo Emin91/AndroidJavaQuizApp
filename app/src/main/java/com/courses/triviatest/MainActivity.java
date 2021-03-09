@@ -1,18 +1,13 @@
 package com.courses.triviatest;
 
-import android.content.Context;
+import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.animation.ScaleAnimation;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
@@ -25,7 +20,9 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "TAG";
-    private Button btn_true, btn_false, btn_next, btn_prev;
+    private Button btn_true;
+    private Button btn_false;
+    private Button btn_prev;
     private TextView text_question_counter, text_card_question, text_correct_answers;
     private CardView cardView;
     private int currentQuestionIndex = 0;
@@ -39,7 +36,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         btn_true = findViewById(R.id.btn_true);
         btn_false = findViewById(R.id.btn_false);
-        btn_next = findViewById(R.id.btn_next);
+        Button btn_next = findViewById(R.id.btn_next);
         btn_prev = findViewById(R.id.btn_prev);
         text_question_counter = findViewById(R.id.text_question_counter);
         text_card_question = findViewById(R.id.text_card_question);
@@ -51,8 +48,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btn_true.setOnClickListener(this);
         btn_false.setOnClickListener(this);
 
-
         questionList = new QuestionBank().getQuestions(new AnswerListAsyncResponse() {
+            @SuppressLint("SetTextI18n")
             @Override
             public void processFinish(ArrayList<Question> questionArrayList) {
                 text_correct_answers.setText(getResources().getString(R.string.text_correct) + " " + countOfCorrectAnswer);
@@ -62,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -114,6 +112,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private void updateQuestion() {
         String question = questionList.get(currentQuestionIndex).getAnswer();
         text_correct_answers.setText(getResources().getString(R.string.text_correct) + " " + countOfCorrectAnswer);
