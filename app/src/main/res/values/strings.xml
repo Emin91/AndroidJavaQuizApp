@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Simple Quiz App</string>
+    <string name="text_quiz">Quiz app</string>
+    <string name="btn_true">True</string>
+    <string name="btn_false">false</string>
+    <string name="btn_next">next</string>
+    <string name="btn_previous">previous</string>
+    <string name="text_question_counter">0 out of 100</string>
+    <string name="correct_answer">Correct!</string>
+    <string name="wrong_answer">Wrong!</string>
+    <string name="text_correct">Correct:</string>
+</resources>
