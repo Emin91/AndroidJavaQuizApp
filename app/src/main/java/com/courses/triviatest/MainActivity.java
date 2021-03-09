@@ -15,7 +15,9 @@ import com.courses.triviatest.data.AnswerListAsyncResponse;
 import com.courses.triviatest.data.QuestionBank;
 import com.courses.triviatest.model.Question;
 import com.courses.triviatest.model.Score;
+import com.courses.triviatest.util.Prefs;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,12 +26,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button btn_true;
     private Button btn_false;
     private Button btn_prev, btn_next;
-    private TextView text_question_counter, text_card_question, text_correct_answers;
+    private TextView text_question_counter, text_card_question, text_correct_answers, text_highest_score;
     private CardView cardView;
     private int scoreCounter = 0;
     private int currentQuestionIndex = 0;
     private List<Question> questionList;
     private Score score;
+    private Prefs prefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         score = new Score();
+        prefs = new Prefs(MainActivity.this);
 
         btn_true = findViewById(R.id.btn_true);
         btn_false = findViewById(R.id.btn_false);
@@ -45,6 +49,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         text_question_counter = findViewById(R.id.text_question_counter);
         text_card_question = findViewById(R.id.text_card_question);
         text_correct_answers = findViewById(R.id.text_correct_answers);
+        text_highest_score = findViewById(R.id.text_highest_score);
         cardView = findViewById(R.id.cardView);
 
         btn_next.setOnClickListener(this);
@@ -55,8 +60,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         questionList = new QuestionBank().getQuestions(new AnswerListAsyncResponse() {
             @Override
             public void processFinish(ArrayList<Question> questionArrayList) {
-                text_correct_answers.setText(String.valueOf(getResources().getString(R.string.text_correct) + " " + score.getScore()));
-                text_question_counter.setText(String.valueOf((currentQuestionIndex + 1) +  " out of " + questionList.size()));
+                text_highest_score.setText(MessageFormat.format("Highest score: {0}", prefs.getHighScore()));
+                text_correct_answers.setText(MessageFormat.format("{0} {1}", getResources().getString(R.string.text_correct), score.getScore()));
+                text_question_counter.setText(MessageFormat.format("{0} out of {1}", currentQuestionIndex + 1, questionList.size()));
                 text_card_question.setText(questionArrayList.get(currentQuestionIndex).getAnswer());
             }
         });
@@ -124,14 +130,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void updateQuestion() {
         Question question = questionList.get(currentQuestionIndex);
-        text_correct_answers.setText(String.valueOf(getResources().getString(R.string.text_correct) + " " + score.getScore()));
+        text_correct_answers.setText(MessageFormat.format("{0} {1}", getResources().getString(R.string.text_correct), score.getScore()));
         text_card_question.setText(question.getAnswer());
         if (question.isAnswered()) {
             disableAnswerButtonsIsAnswered(false);
         } else {
             disableAnswerButtonsIsAnswered(true);
         }
-        text_question_counter.setText(String.valueOf((currentQuestionIndex + 1) + " out of " + questionList.size()));
+        text_question_counter.setText(MessageFormat.format("{0} out of {1}", currentQuestionIndex + 1, questionList.size()));
     }
 
     private void fadeView() {
@@ -145,6 +151,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void shakeAnimation() {
         Animation shake = AnimationUtils.loadAnimation(MainActivity.this, R.anim.shake_animation);
         cardView.setAnimation(shake);
+    }
+
+    @Override
+    protected void onPause() {
+        prefs.saveHighScore(score.getScore());
+        super.onPause();
     }
 }
 

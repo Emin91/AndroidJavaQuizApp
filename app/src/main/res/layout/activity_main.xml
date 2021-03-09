@@ -11,15 +11,16 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="68dp"
+        android:layout_marginTop="16dp"
         android:fontFamily="@font/croissant_one"
-        android:text="@string/text_quiz"
-        android:textColor="@color/white"
-        android:textSize="36sp"
         android:shadowColor="#323232"
         android:shadowDx="0.8"
         android:shadowDy="10"
         android:shadowRadius="10"
+        android:text="@string/text_quiz"
+        android:textColor="@color/white"
+        android:textSize="36sp"
+        app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -28,22 +29,24 @@
         android:id="@+id/cardView"
         android:layout_width="401dp"
         android:layout_height="220dp"
-        android:layout_marginTop="44dp"
+        android:layout_marginTop="72dp"
         app:cardCornerRadius="10dp"
         app:cardElevation="5dp"
         app:contentPadding="8dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.6"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" >
+        app:layout_constraintTop_toBottomOf="@+id/textView">
 
         <TextView
             android:id="@+id/text_card_question"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="More Fonts..."
             android:layout_gravity="center"
-            android:textAlignment="center"
+            android:fontFamily="More Fonts..."
             android:text=""
+            android:textIsSelectable="true"
+            android:textAlignment="center"
             android:textSize="16sp" />
     </androidx.cardview.widget.CardView>
 
@@ -112,8 +115,7 @@
         android:textSize="18sp"
         app:layout_constraintBottom_toTopOf="@+id/cardView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
-        app:layout_constraintVertical_bias="0.538" />
+        app:layout_constraintTop_toBottomOf="@+id/text_highest_score" />
 
     <TextView
         android:id="@+id/text_correct_answers"
@@ -129,6 +131,23 @@
         android:textSize="18sp"
         app:layout_constraintBottom_toTopOf="@+id/cardView"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_highest_score" />
+
+    <TextView
+        android:id="@+id/text_highest_score"
+        android:layout_width="162dp"
+        android:layout_height="27dp"
+        android:shadowColor="#323232"
+        android:shadowDx="0.2"
+        android:shadowDy="3"
+        android:shadowRadius="5"
+        android:textAlignment="center"
+        android:text="@string/highest_score"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/cardView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView"
-        app:layout_constraintVertical_bias="0.571" />
+        app:layout_constraintVertical_bias="0.177" />
 </androidx.constraintlayout.widget.ConstraintLayout>
