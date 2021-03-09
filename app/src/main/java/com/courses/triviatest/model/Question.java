@@ -3,6 +3,7 @@ package com.courses.triviatest.model;
 public class Question {
     private String answer;
     private boolean answerTrue;
+    private boolean isAnswered = false;
 
     public Question() {
 
@@ -29,11 +30,20 @@ public class Question {
         this.answerTrue = answerTrue;
     }
 
+    public boolean isAnswered() {
+        return isAnswered;
+    }
+
+    public void setAnswered(boolean answered) {
+        this.isAnswered = answered;
+    }
+
     @Override
     public String toString() {
         return "\nQuestion { " +
                 "answer='" + answer + '\'' +
                 ", answerTrue=" + answerTrue +
+                ", isAnswered=" + isAnswered +
                 " }";
     }
 }

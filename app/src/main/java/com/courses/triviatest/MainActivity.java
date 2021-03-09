@@ -14,6 +14,7 @@ import androidx.cardview.widget.CardView;
 import com.courses.triviatest.data.AnswerListAsyncResponse;
 import com.courses.triviatest.data.QuestionBank;
 import com.courses.triviatest.model.Question;
+import com.courses.triviatest.model.Score;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,21 +23,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final String TAG = "TAG";
     private Button btn_true;
     private Button btn_false;
-    private Button btn_prev;
+    private Button btn_prev, btn_next;
     private TextView text_question_counter, text_card_question, text_correct_answers;
     private CardView cardView;
+    private int scoreCounter = 0;
     private int currentQuestionIndex = 0;
-    private int countOfCorrectAnswer = 0;
     private List<Question> questionList;
+    private Score score;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        score = new Score();
+
         btn_true = findViewById(R.id.btn_true);
         btn_false = findViewById(R.id.btn_false);
-        Button btn_next = findViewById(R.id.btn_next);
+        btn_next = findViewById(R.id.btn_next);
         btn_prev = findViewById(R.id.btn_prev);
         text_question_counter = findViewById(R.id.text_question_counter);
         text_card_question = findViewById(R.id.text_card_question);
@@ -49,11 +53,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btn_false.setOnClickListener(this);
 
         questionList = new QuestionBank().getQuestions(new AnswerListAsyncResponse() {
-            @SuppressLint("SetTextI18n")
             @Override
             public void processFinish(ArrayList<Question> questionArrayList) {
-                text_correct_answers.setText(getResources().getString(R.string.text_correct) + " " + countOfCorrectAnswer);
-                text_question_counter.setText(currentQuestionIndex + " out of " + questionList.size());
+                text_correct_answers.setText(String.valueOf(getResources().getString(R.string.text_correct) + " " + score.getScore()));
+                text_question_counter.setText(String.valueOf((currentQuestionIndex + 1) +  " out of " + questionList.size()));
                 text_card_question.setText(questionArrayList.get(currentQuestionIndex).getAnswer());
             }
         });
@@ -72,20 +75,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 updateQuestion();
                 break;
             case R.id.btn_prev:
-                text_card_question.setTextColor(getResources().getColor(R.color.black));
-                cardView.setCardBackgroundColor(getResources().getColor(R.color.white));
+                changeCardStyle();
                 if(currentQuestionIndex > 0) {
-                    btn_false.setEnabled(false);
-                    btn_true.setEnabled(false);
                     currentQuestionIndex = (currentQuestionIndex - 1) % questionList.size();
                     updateQuestion();
                 }
                 break;
             case R.id.btn_next:
-                btn_false.setEnabled(true);
-                btn_true.setEnabled(true);
-                text_card_question.setTextColor(getResources().getColor(R.color.black));
-                cardView.setCardBackgroundColor(getResources().getColor(R.color.white));
+                changeCardStyle();
                 currentQuestionIndex = (currentQuestionIndex + 1) % questionList.size();
                 updateQuestion();
                 break;
@@ -94,30 +91,47 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    private void changeCardStyle() {
+        text_card_question.setTextColor(getResources().getColor(R.color.black));
+        cardView.setCardBackgroundColor(getResources().getColor(R.color.white));
+    }
+
     private void checkAnswer(boolean userChooseCorrect) {
         boolean answerIsTrue = questionList.get(currentQuestionIndex).isAnswerTrue();
         if(userChooseCorrect == answerIsTrue) {
-            btn_false.setEnabled(false);
-            btn_true.setEnabled(false);
             fadeView();
-            countOfCorrectAnswer = (countOfCorrectAnswer + 1);
+            addPoints();
+            questionList.get(currentQuestionIndex).setAnswered(true);
             text_card_question.setTextColor(getResources().getColor(R.color.white));
             cardView.setCardBackgroundColor(getResources().getColor(R.color.card_true));
         } else {
-            btn_false.setEnabled(false);
-            btn_true.setEnabled(false);
             shakeAnimation();
+            questionList.get(currentQuestionIndex).setAnswered(true);
             text_card_question.setTextColor(getResources().getColor(R.color.white));
             cardView.setCardBackgroundColor(getResources().getColor(R.color.card_false));
         }
     }
 
-    @SuppressLint("SetTextI18n")
+    private void disableAnswerButtonsIsAnswered(Boolean answer) {
+        btn_false.setEnabled(answer);
+        btn_true.setEnabled(answer);
+    }
+
+    private void addPoints() {
+        scoreCounter += 1;
+        score.setScore(scoreCounter);
+    }
+
     private void updateQuestion() {
-        String question = questionList.get(currentQuestionIndex).getAnswer();
-        text_correct_answers.setText(getResources().getString(R.string.text_correct) + " " + countOfCorrectAnswer);
-        text_card_question.setText(question);
-        text_question_counter.setText(currentQuestionIndex + " out of " + questionList.size());
+        Question question = questionList.get(currentQuestionIndex);
+        text_correct_answers.setText(String.valueOf(getResources().getString(R.string.text_correct) + " " + score.getScore()));
+        text_card_question.setText(question.getAnswer());
+        if (question.isAnswered()) {
+            disableAnswerButtonsIsAnswered(false);
+        } else {
+            disableAnswerButtonsIsAnswered(true);
+        }
+        text_question_counter.setText(String.valueOf((currentQuestionIndex + 1) + " out of " + questionList.size()));
     }
 
     private void fadeView() {

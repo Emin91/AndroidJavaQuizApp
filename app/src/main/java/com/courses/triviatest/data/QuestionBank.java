@@ -29,9 +29,7 @@ public class QuestionBank {
                         Question question = new Question();
                         question.setAnswer(response.getJSONArray(i).get(0).toString());
                         question.setAnswerTrue(response.getJSONArray(i).getBoolean(1));
-
                         questionArrayList.add(question);
-//                        Log.d(TAG, "onResponse: " + question.getAnswer());
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
